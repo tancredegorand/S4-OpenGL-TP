@@ -8,7 +8,35 @@ int main()
     /*********************************
      * HERE SHOULD COME THE INITIALIZATION CODE
      *********************************/
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
 
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    GLfloat vertices[] = {
+      -0.5f, -0.5f, 
+      0.5f, -0.5f,
+      0.0f,0.5f  
+    };
+    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    static constexpr GLuint vertex_attr_position = 0;
+    glEnableVertexAttribArray(vertex_attr_position);
+
+    
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+ 
     // Declare your infinite update loop.
     ctx.update = [&]() {
         /*********************************
