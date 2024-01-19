@@ -1,4 +1,5 @@
 #include "p6/p6.h"
+#include "glimac/default_shader.hpp"
 
 int main()
 {
@@ -9,13 +10,72 @@ int main()
      * HERE SHOULD COME THE INITIALIZATION CODE
      *********************************/
 
+    const p6::Shader shader = p6::load_shader(
+        "shaders/triangle.vs.glsl",
+        "shaders/triangle.fs.glsl"
+    );
+    
+
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    GLfloat vertices[] = {
+        -0.5f, -0.5f, 1.f, 0.f, 0.f, // Premier sommet
+        0.5f, -0.5f, 0.f, 1.f, 0.f,  // Deuxième sommet
+        0.0f, 0.5f, 0.f, 0.f, 1.f    // Troisième sommet
+    };
+    
+    glBufferData(GL_ARRAY_BUFFER, 15 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    static constexpr GLuint vertex_attr_position = 3;
+    glEnableVertexAttribArray(vertex_attr_position);
+
+    
+    static constexpr GLuint vertex_attr_color = 8;
+    glEnableVertexAttribArray(vertex_attr_color);
+
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+     glVertexAttribPointer(vertex_attr_color, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+    
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+
+ 
     // Declare your infinite update loop.
     ctx.update = [&]() {
-        /*********************************
+        /**********************²***********
          * HERE SHOULD COME THE RENDERING CODE
          *********************************/
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBindVertexArray(vao);
+        glimac::bind_default_shader();
+        shader.use();
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindVertexArray(0);
+
+        
+        
+
     };
 
     // Should be done last. It starts the infinite loop.
     ctx.start();
+    glDeleteBuffers(1, &vbo); 
+    glDeleteVertexArrays(1, &vao); 
 }
