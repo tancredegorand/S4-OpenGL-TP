@@ -1,4 +1,5 @@
 #include "p6/p6.h"
+#include "glimac/default_shader.hpp"
 
 int main()
 {
@@ -35,15 +36,31 @@ int main()
 
     glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
 
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+
+
  
     // Declare your infinite update loop.
     ctx.update = [&]() {
         /*********************************
          * HERE SHOULD COME THE RENDERING CODE
          *********************************/
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBindVertexArray(vao);
+        glimac::bind_default_shader();
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindVertexArray(0);
+
+        
+        
+
     };
 
     // Should be done last. It starts the infinite loop.
     ctx.start();
+    glDeleteBuffers(1, &vbo); 
+    glDeleteVertexArrays(1, &vao); 
 }
