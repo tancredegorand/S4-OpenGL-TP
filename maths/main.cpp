@@ -7,12 +7,22 @@
 
 using namespace std;
 
-int main() {
-  // This program will create some sequence of
-  // random numbers on every program run
-  srand(time(NULL));
-  for (int i = 0; i < 5; i++)
-    cout << rand() % 6 + 1 << " ";
+void randBinaire(){
+    srand(time (NULL));
+    for (unsigned int i = 0; i < 50; i++){
+        cout << rand() % 2 << " "; 
+    }
 
-  return 0;
+}
+
+int main() {
+//   // This program will create some sequence of
+//   // random numbers on every program run
+//   srand(time(NULL));
+//   for (int i = 0; i < 5; i++)
+//     cout << rand() % 6 + 1 << " ";
+
+    randBinaire(); 
+
+    return 0;
 }
