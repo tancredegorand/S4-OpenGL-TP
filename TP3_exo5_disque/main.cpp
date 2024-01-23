@@ -1,5 +1,13 @@
+#include "glm/ext/scalar_constants.hpp"
 #include "p6/p6.h"
 #include "glimac/default_shader.hpp"
+#include "glm/glm.hpp"
+
+
+struct Vertex2DColor{
+    glm::vec2 position; 
+    glm::vec3 color;
+};
 
 int main()
 {
@@ -14,6 +22,7 @@ int main()
         "shaders/triangle.vs.glsl",
         "shaders/triangle.fs.glsl"
     );
+
     
 
     GLuint vbo;
@@ -21,14 +30,25 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    GLfloat vertices[] = {
-        -0.5f, -0.5f, 1.f, 0.f, 0.f, // Premier sommet
-        0.5f, -0.5f, 0.f, 1.f, 0.f,  // Deuxième sommet
-        0.0f, 0.5f, 0.f, 0.f, 1.f    // Troisième sommet
-    };
-
     
-    glBufferData(GL_ARRAY_BUFFER, 15 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    const float rayon = 1.f; 
+    const unsigned int pointNumber = 16;
+
+    Vertex2DColor vertices[3 * pointNumber];
+
+    for (unsigned int i = 0; i < pointNumber; ++i) {
+        float theta1 = static_cast<float>(i) *  glm::pi<float>() / static_cast<float>(pointNumber);
+        float theta2 = static_cast<float>(i + 1) * glm::pi<float>() / static_cast<float>(pointNumber);
+
+
+        vertices[3 * i] = Vertex2DColor{{0.f, 0.f}, {1.f, 0.f, 0.f}}; // Centre du cercle
+        vertices[3 * i + 1] = Vertex2DColor{{rayon * cos(theta1), rayon * sin(theta1)}, {0.f, 1.f, 0.f}};
+        vertices[3 * i + 2] = Vertex2DColor{{rayon * cos(theta2), rayon * sin(theta2)}, {0.f, 0.f, 1.f}};
+    }
+
+  
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -48,9 +68,9 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
-    glVertexAttribPointer(vertex_attr_color, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
-    
+    glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2DColor), reinterpret_cast<void*>(offsetof(Vertex2DColor, position)));
+    glVertexAttribPointer(vertex_attr_color, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2DColor), reinterpret_cast<void*>(offsetof(Vertex2DColor, color)));
+        
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -67,7 +87,8 @@ int main()
         glBindVertexArray(vao);
         glimac::bind_default_shader();
         shader.use();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 3 * pointNumber);
+
         glBindVertexArray(0);
 
         

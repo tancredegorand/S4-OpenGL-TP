@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void randBinaire(){
+void alea(){
     srand(time (NULL));
     for (unsigned int i = 0; i < 50; i++){
         cout << rand() % 2 << " "; 
@@ -16,13 +16,9 @@ void randBinaire(){
 }
 
 int main() {
-//   // This program will create some sequence of
-//   // random numbers on every program run
-//   srand(time(NULL));
-//   for (int i = 0; i < 5; i++)
-//     cout << rand() % 6 + 1 << " ";
 
-    randBinaire(); 
+
+    alea(); 
 
     return 0;
 }

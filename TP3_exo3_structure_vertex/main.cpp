@@ -1,5 +1,12 @@
 #include "p6/p6.h"
 #include "glimac/default_shader.hpp"
+#include "glm/glm.hpp"
+
+
+struct Vertex2DColor{
+    glm::vec2 position; 
+    glm::vec3 color;
+};
 
 int main()
 {
@@ -21,14 +28,14 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    GLfloat vertices[] = {
-        -0.5f, -0.5f, 1.f, 0.f, 0.f, // Premier sommet
-        0.5f, -0.5f, 0.f, 1.f, 0.f,  // Deuxième sommet
-        0.0f, 0.5f, 0.f, 0.f, 1.f    // Troisième sommet
+    Vertex2DColor vertices[] = { 
+        Vertex2DColor{{-0.5f, -0.5f}, {1.f, 0.f, 0.f}}, // Premier sommet
+        Vertex2DColor{{ 0.5f, -0.5f}, {0.f, 1.f, 0.f}}, // Deuxième sommet
+        Vertex2DColor{{ 0.0f,  0.5f}, {0.f, 0.f, 1.f}}  // Troisième sommet
     };
 
     
-    glBufferData(GL_ARRAY_BUFFER, 15 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex2DColor), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -48,9 +55,9 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
-    glVertexAttribPointer(vertex_attr_color, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
-    
+    glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2DColor), reinterpret_cast<void*>(offsetof(Vertex2DColor, position)));
+    glVertexAttribPointer(vertex_attr_color, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2DColor), reinterpret_cast<void*>(offsetof(Vertex2DColor, color)));
+        
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
