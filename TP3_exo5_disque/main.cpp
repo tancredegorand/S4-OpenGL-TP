@@ -9,6 +9,7 @@ struct Vertex2DColor{
     glm::vec3 color;
 };
 
+
 int main()
 {
     auto ctx = p6::Context{{1280, 720, "TP3 EX2"}};
@@ -31,19 +32,25 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     
-    const float rayon = 1.f; 
-    const unsigned int pointNumber = 16;
+    const float rayon = 0.5f;
+    const unsigned int pointNumber = 100;
+    float              r           = 1.f;
+    float              v           = 0.5f;
+    float              b           = 0.f;
+    
 
     Vertex2DColor vertices[3 * pointNumber];
 
     for (unsigned int i = 0; i < pointNumber; ++i) {
-        float theta1 = static_cast<float>(i) *  glm::pi<float>() / static_cast<float>(pointNumber);
-        float theta2 = static_cast<float>(i + 1) * glm::pi<float>() / static_cast<float>(pointNumber);
+        float theta1 = static_cast<float>(i) * 2 * glm::pi<float>() / static_cast<float>(pointNumber);
+        float theta2 = static_cast<float>(i + 1) * 2 * glm::pi<float>() / static_cast<float>(pointNumber);
 
 
-        vertices[3 * i] = Vertex2DColor{{0.f, 0.f}, {1.f, 0.f, 0.f}}; // Centre du cercle
-        vertices[3 * i + 1] = Vertex2DColor{{rayon * cos(theta1), rayon * sin(theta1)}, {0.f, 1.f, 0.f}};
-        vertices[3 * i + 2] = Vertex2DColor{{rayon * cos(theta2), rayon * sin(theta2)}, {0.f, 0.f, 1.f}};
+        vertices[3 * i] = Vertex2DColor{{0.f, 0.f}, {1.f, 1.f, 1.f}}; // Centre du cercle
+        vertices[3 * i + 1] = Vertex2DColor{{rayon * cos(theta1), rayon * sin(theta1)}, {r, v, b}};
+        vertices[3 * i + 2] = Vertex2DColor{{rayon * cos(theta2), rayon * sin(theta2)}, {r, v, b}};
+
+
     }
 
   

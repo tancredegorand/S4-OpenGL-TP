@@ -4,14 +4,15 @@ This template will help you follow the lessons from [this OpenGL class](https://
 
 **It works on all platforms (Windows, Linux, MacOS).**
 
-- [Setting up](#setting-up)
-  - [Creating a repository](#creating-a-repository)
-  - [Downloading your repository](#downloading-your-repository)
-  - [Compiling](#compiling)
-- [Coding](#coding)
-  - [Folder structure](#folder-structure)
-  - [Switching exercise](#switching-exercise)
-  - [Adding an exercise folder](#adding-an-exercise-folder)
+- [OpenGL TPs Template](#opengl-tps-template)
+  - [Setting up](#setting-up)
+    - [Creating a repository](#creating-a-repository)
+    - [Downloading your repository](#downloading-your-repository)
+    - [Compiling](#compiling)
+  - [Coding](#coding)
+    - [Folder structure](#folder-structure)
+    - [Switching exercise](#switching-exercise)
+    - [Adding an exercise folder](#adding-an-exercise-folder)
 
 ## Setting up
 
@@ -68,3 +69,6 @@ add_exercise(TP2_exo2)
 add_exercise(TP2_exo3)
 # ...
 ```
+
+
+TP link : https://julesfouchy.github.io/Learn--OpenGL/
