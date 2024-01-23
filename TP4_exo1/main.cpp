@@ -1,4 +1,3 @@
-#include "glm/ext/scalar_constants.hpp"
 #include "p6/p6.h"
 #include "glimac/default_shader.hpp"
 #include "glm/glm.hpp"
@@ -9,10 +8,9 @@ struct Vertex2DColor{
     glm::vec3 color;
 };
 
-
 int main()
 {
-    auto ctx = p6::Context{{1280, 720, "TP3 EX2"}};
+    auto ctx = p6::Context{{1280, 720, "TP4 EX1"}};
     ctx.maximize_window();
 
     /*********************************
@@ -20,10 +18,9 @@ int main()
      *********************************/
 
     const p6::Shader shader = p6::load_shader(
-        "shaders/triangle.vs.glsl",
-        "shaders/triangle.fs.glsl"
+        "shaders/color2D.vs.glsl",
+        "shaders/grey2d.fs.glsl"
     );
-
     
 
     GLuint vbo;
@@ -31,31 +28,14 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+    Vertex2DColor vertices[] = { 
+        Vertex2DColor{{-0.5f, -0.5f}, {1.f, 0.f, 0.f}}, // Premier sommet
+        Vertex2DColor{{ 0.5f, -0.5f}, {0.f, 1.f, 0.f}}, // Deuxième sommet
+        Vertex2DColor{{ 0.0f,  0.5f}, {0.f, 0.f, 1.f}}  // Troisième sommet
+    };
+
     
-    const float rayon = 0.5f;
-    const unsigned int pointNumber = 100;
-    float              r           = 1.f;
-    float              v           = 0.5f;
-    float              b           = 0.f;
-    
-
-    Vertex2DColor vertices[3 * pointNumber];
-
-    for (unsigned int i = 0; i < pointNumber; ++i) {
-        float theta1 = static_cast<float>(i) * 2 * glm::pi<float>() / static_cast<float>(pointNumber);
-        float theta2 = static_cast<float>(i + 1) * 2 * glm::pi<float>() / static_cast<float>(pointNumber);
-
-
-        vertices[3 * i] = Vertex2DColor{{0.f, 0.f}, {1.f, 1.f, 1.f}}; // Centre du cercle
-        vertices[3 * i + 1] = Vertex2DColor{{rayon * cos(theta1), rayon * sin(theta1)}, {r, v, b}};
-        vertices[3 * i + 2] = Vertex2DColor{{rayon * cos(theta2), rayon * sin(theta2)}, {r, v, b}};
-
-
-    }
-
-  
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex2DColor), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -64,11 +44,11 @@ int main()
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    static constexpr GLuint vertex_attr_position = 3;
+    static constexpr GLuint vertex_attr_position = 0;
     glEnableVertexAttribArray(vertex_attr_position);
 
     
-    static constexpr GLuint vertex_attr_color = 8;
+    static constexpr GLuint vertex_attr_color = 1;
     glEnableVertexAttribArray(vertex_attr_color);
 
 
@@ -94,11 +74,11 @@ int main()
         glBindVertexArray(vao);
         glimac::bind_default_shader();
         shader.use();
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 3 * pointNumber);
-
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
-                
+        
+        
 
     };
 
