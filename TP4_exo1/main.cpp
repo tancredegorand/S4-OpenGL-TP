@@ -10,7 +10,7 @@ struct Vertex2DColor{
 
 int main()
 {
-    auto ctx = p6::Context{{1280, 720, "TP4 EX1"}};
+    auto ctx = p6::Context{{1280, 720, "TP3 EX2"}};
     ctx.maximize_window();
 
     /*********************************
