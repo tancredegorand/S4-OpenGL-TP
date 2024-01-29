@@ -16,8 +16,6 @@ void alea(){
 }
 
 int main() {
-
-
     alea(); 
 
     return 0;
