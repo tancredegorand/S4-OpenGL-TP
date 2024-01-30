@@ -19,7 +19,8 @@ int main()
 
     const p6::Shader shader = p6::load_shader(
         "shaders/color2D.vs.glsl",
-        "shaders/grey2d.fs.glsl"
+        "shaders/color2D.fs.glsl"
+        //"shaders/grey2d.fs.glsl"
     );
     
 

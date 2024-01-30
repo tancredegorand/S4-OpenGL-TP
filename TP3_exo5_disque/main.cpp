@@ -50,9 +50,7 @@ int main()
         vertices[3 * i + 1] = Vertex2DColor{{rayon * cos(theta1), rayon * sin(theta1)}, {r, v, b}};
         vertices[3 * i + 2] = Vertex2DColor{{rayon * cos(theta2), rayon * sin(theta2)}, {r, v, b}};
 
-
     }
-
   
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
