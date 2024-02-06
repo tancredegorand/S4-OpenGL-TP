@@ -72,5 +72,3 @@ add_exercise(TP2_exo3)
 
 
 TP link : https://julesfouchy.github.io/Learn--OpenGL/
-
-https://julesfouchy.github.io/Learn--OpenGL/TP4/jouer-avec-les-shaders
