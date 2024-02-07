@@ -35,6 +35,7 @@ int main()
         Vertex2DColor{{ 0.0f,  0.5f}, {0.f, 0.f, 1.f}} 
     };
 
+   float uVariable  = 45.; 
 
     
     glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex2DColor), vertices, GL_STATIC_DRAW);
@@ -76,6 +77,10 @@ int main()
         glBindVertexArray(vao);
         glimac::bind_default_shader();
         shader.use();
+
+         glGetUniformLocation(shader.id(), "uVariable"); 
+        glUniform1f()
+
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
