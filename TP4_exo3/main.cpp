@@ -1,95 +1,99 @@
-#include "p6/p6.h"
+#include <cstddef>
 #include "glimac/default_shader.hpp"
-#include "glm/glm.hpp"
+#include "p6/p6.h"
 
-
-struct Vertex2DColor{
-    glm::vec2 position; 
-    glm::vec3 color;
+struct Vertex2DUV {
+    glm::vec2 position;
+    glm::vec2 texture_uv;
 };
 
 int main()
 {
-
-    auto ctx = p6::Context{{1280, 720, "TP3 EX2"}};
+    auto ctx = p6::Context{{1280, 720, "TP3 EX1"}};
     ctx.maximize_window();
-
-    /*********************************
-     * HERE SHOULD COME THE INITIALIZATION CODE
-     *********************************/
 
     const p6::Shader shader = p6::load_shader(
         "shaders/tex2D.vs.glsl",
-        "shaders/triangle.fs.glsl"
+        "shaders/tex2D.fs.glsl"
     );
-    
 
     GLuint vbo;
     glGenBuffers(1, &vbo);
-
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    Vertex2DColor vertices[] = { 
-        Vertex2DColor{{-0.5f, -0.5f}, {1.f, 0.f, 0.f}}, 
-        Vertex2DColor{{ 0.5f, -0.5f}, {0.f, 1.f, 0.f}}, 
-        Vertex2DColor{{ 0.0f,  0.5f}, {0.f, 0.f, 1.f}} 
+    Vertex2DUV vertices[] = {
+        {glm::vec2(-1.f, -1.f), glm::vec2(0.f, 0.f)},
+        {glm::vec2(1.f, -1.f), glm::vec2(0.f, 0.f)},
+        {glm::vec2(0.0f, 1.f), glm::vec2(0.f, 0.f)}
     };
 
-   float uVariable  = 45.; 
-
-    
-    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex2DColor), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex2DUV), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 
     GLuint vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-
-    static constexpr GLuint vertex_attr_position = 3;
+    static constexpr GLuint vertex_attr_position = 0;
+    static constexpr GLuint vertex_attr_UV       = 1;
     glEnableVertexAttribArray(vertex_attr_position);
-
-    
-    static constexpr GLuint vertex_attr_color = 8;
-    glEnableVertexAttribArray(vertex_attr_color);
-
-
+    glEnableVertexAttribArray(vertex_attr_UV);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-    glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2DColor), reinterpret_cast<void*>(offsetof(Vertex2DColor, position)));
-    glVertexAttribPointer(vertex_attr_color, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2DColor), reinterpret_cast<void*>(offsetof(Vertex2DColor, color)));
-        
-    
+    glVertexAttribPointer(vertex_attr_position, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2DUV), (const GLvoid*)offsetof(Vertex2DUV, position));
+    glVertexAttribPointer(vertex_attr_UV, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2DUV), (const GLvoid*)offsetof(Vertex2DUV, texture_uv));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    GLint uLocat = glGetUniformLocation(shader.id(), "uTime");
 
- 
     // Declare your infinite update loop.
     ctx.update = [&]() {
-        /**********************²***********
-         * HERE SHOULD COME THE RENDERING CODE
-         *********************************/
-
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(vao);
-        glimac::bind_default_shader();
         shader.use();
 
-         glGetUniformLocation(shader.id(), "uVariable"); 
-        glUniform1f()
-
+        glUniform1f(uLocat, ctx.time());
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glBindVertexArray(0);
+        glimac::bind_default_shader();
+
+        // glm::mat3 initialScale = scale(0.25f, 0.25f);
+
+        // float     clockwiseRotation     = ctx.time();
+        // float     anticlockwiseRotation = -ctx.time();
+        // glm::mat3 rotateClockwise       = rotate(clockwiseRotation);
+        // glm::mat3 rotateAnticlockwise   = rotate(anticlockwiseRotation);
+
+        // glm::mat3 translateTopLeft     = translate(-0.5f, 0.5f);
+        // glm::mat3 translateTopRight    = translate(0.5f, 0.5f);
+        // glm::mat3 translateBottomLeft  = translate(-0.5f, -0.5f);
+        // glm::mat3 translateBottomRight = translate(0.5f, -0.5f);
+
+        // glm::mat3 translateToOrigin       = translate(0.5f, 0.5f);
+        // glm::mat3 translateBackToPosition = translate(-0.5f, -0.5f);
+        // GLint     uModelMatrixLoc         = glGetUniformLocation(shader.id(), "uModelMatrix");
+        // glUniformMatrix3fv(uModelMatrixLoc, 1, GL_FALSE, glm::value_ptr(translateTopLeft * rotateClockwise * initialScale * translateToOrigin * rotateClockwise * translateBackToPosition));
+        // glUniform3f(uColorLoc, 1.0f, 0.25f, 0.f);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // glUniformMatrix3fv(uModelMatrixLoc, 1, GL_FALSE, glm::value_ptr(translateTopRight * rotateAnticlockwise * initialScale * translateToOrigin * rotateAnticlockwise * translateBackToPosition));
+        // glUniform3f(uColorLoc, 1.0f, 0.0f, 0.0f);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // glUniformMatrix3fv(uModelMatrixLoc, 1, GL_FALSE, glm::value_ptr(translateBottomLeft * rotateClockwise * initialScale * translateToOrigin * rotateClockwise * translateBackToPosition));
+        // glUniform3f(uColorLoc, 1.0f, 1.0f, 0.0f);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // glUniformMatrix3fv(uModelMatrixLoc, 1, GL_FALSE, glm::value_ptr(translateBottomRight * rotateAnticlockwise * initialScale * translateToOrigin * rotateAnticlockwise * translateBackToPosition));
+        // glUniform3f(uColorLoc, 0.0f, 0.0f, 1.0f);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        // glBindVertexArray(0);
 
 
     };
 
     // Should be done last. It starts the infinite loop.
     ctx.start();
-    glDeleteBuffers(1, &vbo); 
-    glDeleteVertexArrays(1, &vao); 
+    glDeleteBuffers(1, &vbo);
+    glDeleteVertexArrays(1, &vao);
 }
-

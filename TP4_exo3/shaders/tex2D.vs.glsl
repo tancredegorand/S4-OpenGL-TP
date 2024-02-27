@@ -1,27 +1,32 @@
-#version 330
+#version 330 core
 
-layout(location = 3) in vec2 aVertexPosition;
-layout(location = 8) in vec3 aVertexColor;
+layout(location = 0) in vec2 aVertexPosition;
+layout(location = 1) in vec2 aVertexUV;
 
-out vec3 vColor;
+out vec2 vFragUV;
+out vec2 vVertexPosition;
 
-uniform float uTime;
+uniform float uTime ;
 
-mat3 rotate(int alpha){
+mat3 rotate(float a){
     return mat3(
-        vec3(cos(alpha), -sin(alpha), 0),
-        vec3(sin(alpha), cos(alpha), 0),
-        vec3(0, 0, 1)
+    vec3(cos(a), sin(a), 0),
+    vec3(-sin(a), cos(a),0),
+    vec3(0, 0, 1)
     );
+
 }
 
 
 
+void main() {
+    //red color
+    vFragUV = aVertexUV;
+    vVertexPosition = aVertexPosition;
+    vec2 transformed = (rotate(uTime)* vec3(aVertexPosition, 1.)).xy;
+    gl_Position = vec4( transformed, 0.0, 2.0);
+    
 
 
-void main()
-{
-    mat3 M = rotate(int(uTime));
-    vColor      = aVertexColor;
-    gl_Position = vec4((M * vec3(aVertexPosition, 1.)).xy, 0., 1.);
+
 }
