@@ -250,16 +250,17 @@ int main(){
     
     // -- Bêta --
     //continue in, alpha beta continue, continue out
-    // float alpha = 5.f; 
-    // float beta = 1.f; 
-    // float esperance = 0.; 
-    // int nb_try = 100;
+    float alpha = 5.f; 
+    float beta = 1.f; 
+    float esperance = 0.; 
+    int nb_try = 100;
 
-    // for(unsigned int i = 0; i< nb_try; i++){
-    //     float res =  loi_beta(alpha, beta); 
-    //     std::cout << res << std::endl;
-    //     esperance+= res;
-    // }
+    for(unsigned int i = 0; i< nb_try; i++){
+        float res =  loi_beta(alpha, beta); 
+        std::cout << res << std::endl;
+        esperance+= res;
+    }
+    //
 
     // esperance/=nb_try; 
     // std::cout << "Esperance : " << esperance << std::endl;
