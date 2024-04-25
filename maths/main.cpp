@@ -27,12 +27,13 @@ float alea(float min, float max)
 }
 
 
-int randomBinary(){
-    return alea(0, 2); 
-}
-
 float random1(){
     return alea(0.f, 1.f);
+}
+
+
+int randomBinary(){
+    return alea(0, 2); 
 }
 
 float factoriel(float x){
@@ -136,6 +137,56 @@ bool bernoulli(double p){
     return false;
     }
 }
+
+
+float loi_laplace(float mu, float b)
+{
+    float x = random1() - 0.5;
+    float res = mu - b * std::copysign(1.0f, x) * std::log(1.0f - 2.0f * std::fabs(x)); 
+    //[-1, 1];
+    res = res/10.0f; 
+    if (res <= 1.0f && res >= -1.0f) {
+        return res; 
+    }
+
+}
+
+
+float loi_geometric(float p){
+    float res = std::log(1.0 - random1()) / std::log(1.0 - p);
+    res = res/10.0f; 
+    if (res <= 1.0f && res >= -1.0f) {
+        return 0.4f * res + 0.9f; //pour [0.5, 1.3]
+    }
+
+}
+
+
+float loi_depareto(float alpha, float a, float x0) {
+    float u = random1();
+    float res = a * (1.0f - u) / pow(u, 1.0f / alpha) + x0;
+     return 2.0f * (res / 10.0f - 0.5f);
+}
+
+
+
+// float loi_laplace(float mu, float b) {
+//     float x = random1() - 0.5;
+//     float res = mu - b * std::copysign(1.0f, x) * std::log(1.0f - 2.0f * std::fabs(x)); 
+    
+//     // Normalisation de res pour le mettre dans l'intervalle [-1, 1]
+//     float max_val = b * (1.0f + std::log(2.0f));
+//     res /= max_val;
+//     // Vérification si res est dans l'intervalle [-1, 1]
+//     if (res <= 1.0f && res >= -1.0f) {
+//         return res; 
+//     }
+// }
+
+
+
+
+
 
 
 
@@ -250,16 +301,16 @@ int main(){
     
     // -- Bêta --
     //continue in, alpha beta continue, continue out
-    float alpha = 5.f; 
-    float beta = 1.f; 
-    float esperance = 0.; 
-    int nb_try = 100;
+    // float alpha = 5.f; 
+    // float beta = 1.f; 
+    // float esperance = 0.; 
+    // int nb_try = 100;
 
-    for(unsigned int i = 0; i< nb_try; i++){
-        float res =  loi_beta(alpha, beta); 
-        std::cout << res << std::endl;
-        esperance+= res;
-    }
+    // for(unsigned int i = 0; i< nb_try; i++){
+    //     float res =  loi_beta(alpha, beta); 
+    //     std::cout << res << std::endl;
+    //     esperance+= res;
+    // }
     //
 
     // esperance/=nb_try; 
@@ -287,8 +338,35 @@ int main(){
 
 
 
+    // --La place--
+    //continue in, continue out
+    // int nb_try = 100;
+    // float mu = -5.f;
+    // float b = 4.; 
+    // for(unsigned int i = 0; i< nb_try; i++){
+    //     std::cout << loi_laplace(mu, b) << std::endl;
+    // }
 
 
+    // --Geo--
+    int nb_try = 100;
+    float p = 0.2;
+    for(unsigned int i = 0; i < nb_try; i++){
+        std::cout << loi_geometric(p) << std::endl;
+    }
+
+
+
+    // --pareto--
+    // int nb_try = 100;
+    // float alpha = 4.f;
+    // float a = 5.f; 
+    // float x0 = 5.f;
+    // for(unsigned int i = 0; i < nb_try; i++){
+    //     std::cout << loi_depareto(alpha, a, x0) << std::endl;
+    // }
+
+    
 
     return 0;
 }
