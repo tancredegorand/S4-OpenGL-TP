@@ -102,7 +102,9 @@ std::vector<T> permutation(std::vector<T> vector) {
 
 float exponentielle(float lambda)
 {
-  return (-1 / lambda) * std::log(random1());
+    float res = (-1 / lambda) * std::log(random1());
+    return res;
+
 }
 
 
@@ -112,12 +114,12 @@ float gamma(float x){
     return factoriel(x-1);
 }
 
-float loi_beta(float alpha, float beta){
-    const float random = random1();
-    const float numerateur = std::pow(random, alpha - 1) * std::pow(1 - random, beta - 1);
-    const float denominateur = (gamma(alpha) * gamma(beta)) / gamma(alpha + beta);
-    return (numerateur / denominateur);
-}
+// float loi_beta(float alpha, float beta){
+//     const float random = random1();
+//     const float numerateur = std::pow(random, alpha - 1) * std::pow(1 - random, beta - 1);
+//     const float denominateur = (gamma(alpha) * gamma(beta)) / gamma(alpha + beta);
+//     return (numerateur / denominateur);
+// }
 
 //--
 
@@ -128,9 +130,37 @@ double loi_normale(float esperance, float ecart_type)
     return res;
 }
 
+
+
+
+float loi_beta(float alpha, float beta) {
+    float x, y;
+    do {
+        float u = random1();
+        float v = random1();
+
+        x = std::pow(u, 1.0f / alpha);
+        y = std::pow(v, 1.0f / beta);
+    } while (x + y > 1.0f); 
+
+    float result = ( x / (x + y));
+    return result;
+}
+
+// float loi_beta(float alpha, float beta) {
+//     float u = random1();
+//     float v = random1();
+//     float sample = pow(u, 1.0f / alpha);
+//     sample /= pow(v, 1.0f / beta);
+//     return sample / (sample + 1.0f);
+// }
+
+
+
+
 //--
 
-bool bernoulli(double p){
+bool bernoulli(float p){
     if(random1()<p){
         return true;
     } else {
@@ -143,29 +173,30 @@ float loi_laplace(float mu, float b)
 {
     float x = random1() - 0.5;
     float res = mu - b * std::copysign(1.0f, x) * std::log(1.0f - 2.0f * std::fabs(x)); 
-    //[-1, 1];
-    res = res/10.0f; 
-    if (res <= 1.0f && res >= -1.0f) {
-        return res; 
-    }
+    return res;
 
 }
 
 
-float loi_geometric(float p){
-    float res = std::log(1.0 - random1()) / std::log(1.0 - p);
-    res = res/10.0f; 
-    if (res <= 1.0f && res >= -1.0f) {
-        return 0.4f * res + 0.9f; //pour [0.5, 1.3]
-    }
 
+
+
+//pour [0.5, 1.3]
+
+
+#include <cmath>
+
+int loi_geometric(float p) {
+    int res = std::log(1.0 - random1()) / std::log(1.0 - p);
+    return res; 
 }
+
 
 
 float loi_depareto(float alpha, float a, float x0) {
     float u = random1();
     float res = a * (1.0f - u) / pow(u, 1.0f / alpha) + x0;
-     return 2.0f * (res / 10.0f - 0.5f);
+    return res;
 }
 
 
@@ -183,6 +214,11 @@ float loi_depareto(float alpha, float a, float x0) {
 //     }
 // }
 
+
+    // Transformation linéaire [0, 1] à l'intervalle [-1, 1]
+    float convertir_interval(float x) {
+        return 2.0 * x - 1.0;
+    }
 
 
 
@@ -284,9 +320,8 @@ int main(){
 
 
 
-    // --- Exponentielle --- 
-    //continue (in out)
-    // float lambda = 1.0f; //modifier la courbe exp
+    // --- Exp --- 
+    // float lambda = 1.0f; 
     // int nb_try = 100; 
     // float esperance = 0.; 
 
@@ -301,8 +336,8 @@ int main(){
     
     // -- Bêta --
     //continue in, alpha beta continue, continue out
-    // float alpha = 5.f; 
-    // float beta = 1.f; 
+    // float alpha = 0.5f; 
+    // float beta = 0.5f; 
     // float esperance = 0.; 
     // int nb_try = 100;
 
@@ -311,7 +346,10 @@ int main(){
     //     std::cout << res << std::endl;
     //     esperance+= res;
     // }
-    //
+    
+
+
+
 
     // esperance/=nb_try; 
     // std::cout << "Esperance : " << esperance << std::endl;
@@ -319,9 +357,9 @@ int main(){
     // // -- Loi normal - méthode box-Muller --
     // centrée ->(en 0), réduite->(hauteur de la cloche)
     // continue in out
-    // float esperance  = 3;
-    // float ecart_type = 2;
-    // int nb_try = 100;
+    // float esperance  = 0;
+    // float ecart_type = 1;
+    // int nb_try = 300;
     // for(unsigned int i = 0; i< nb_try; i++){
     //     std::cout << loi_normale(esperance, ecart_type) << std::endl;
     // }
@@ -341,8 +379,8 @@ int main(){
     // --La place--
     //continue in, continue out
     // int nb_try = 100;
-    // float mu = -5.f;
-    // float b = 4.; 
+    // float mu = 0.f;
+    // float b = 1.; 
     // for(unsigned int i = 0; i< nb_try; i++){
     //     std::cout << loi_laplace(mu, b) << std::endl;
     // }
@@ -361,7 +399,7 @@ int main(){
     // int nb_try = 100;
     // float alpha = 4.f;
     // float a = 5.f; 
-    // float x0 = 5.f;
+    // float x0 = 2.f;
     // for(unsigned int i = 0; i < nb_try; i++){
     //     std::cout << loi_depareto(alpha, a, x0) << std::endl;
     // }
